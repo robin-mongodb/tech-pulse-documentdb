@@ -1,0 +1,40 @@
+#!/bin/bash
+set -eux
+
+# --- mongosh + CA bundle ------------------------------------------------------
+
+cat > /etc/yum.repos.d/mongodb-org-7.0.repo <<'EOF'
+[mongodb-org-7.0]
+name=MongoDB Repository
+baseurl=https://repo.mongodb.org/yum/amazon/2/mongodb-org/7.0/x86_64/
+gpgcheck=1
+enabled=1
+gpgkey=https://pgp.mongodb.com/server-7.0.asc
+EOF
+
+yum install -y mongodb-mongosh git
+
+BENCH_DIR=/home/ec2-user
+curl -fsSL https://truststore.pki.rds.amazonaws.com/global/global-bundle.pem \
+  -o "$BENCH_DIR/global-bundle.pem"
+
+cat > "$BENCH_DIR/connect.sh" <<'EOS'
+#!/bin/bash
+mongosh --tls --tlsCAFile "$(dirname "$0")/global-bundle.pem" \
+  --host "${docdb_endpoint}" \
+  --port ${docdb_port} \
+  -u "${docdb_username}"
+EOS
+chmod +x "$BENCH_DIR/connect.sh"
+
+# --- Go (pinned tarball) ------------------------------------------------------
+
+GO_VERSION="${go_version}"
+curl -fsSL "https://go.dev/dl/go$${GO_VERSION}.linux-amd64.tar.gz" -o /tmp/go.tgz
+rm -rf /usr/local/go
+tar -C /usr/local -xzf /tmp/go.tgz
+ln -sf /usr/local/go/bin/go /usr/local/bin/go
+ln -sf /usr/local/go/bin/gofmt /usr/local/bin/gofmt
+rm -f /tmp/go.tgz
+
+chown -R ec2-user:ec2-user "$BENCH_DIR/global-bundle.pem" "$BENCH_DIR/connect.sh"

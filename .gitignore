@@ -1,0 +1,38 @@
+# Local provider plugins + module cache
+.terraform/
+
+# State files — contain resource IDs and secrets (master_password, etc.)
+*.tfstate
+*.tfstate.*
+*.tfstate.backup
+
+# Crash logs
+crash.log
+crash.*.log
+
+# Real variable values — passwords, key names, project prefixes
+# Commit terraform.tfvars.example instead.
+*.tfvars
+*.tfvars.json
+!*.tfvars.example
+
+# CLI config that may hold credentials
+.terraformrc
+terraform.rc
+
+# Override files — commonly used for local-only tweaks
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Plan artifacts
+*.tfplan
+tfplan
+
+# SSH private keys, in case someone drops one in the repo dir
+*.pem
+*.key
+
+# macOS junk
+.DS_Store

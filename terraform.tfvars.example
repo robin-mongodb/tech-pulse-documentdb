@@ -1,0 +1,28 @@
+# Copy this file to `terraform.tfvars` and edit the values below.
+# `terraform.tfvars` is auto-loaded by `terraform apply`.
+
+# AWS region to deploy into. Must match the region your EC2 key pair lives in.
+aws_region = "eu-west-2"
+
+# Name prefix for every resource. Change if two SAs share an AWS account.
+project_name = "docdb-sa-name"
+
+# DocumentDB instance class for all 3 cluster nodes.
+# Check this link for supported instance classes - https://docs.aws.amazon.com/documentdb/latest/devguide/db-instance-classes.html#db-instance-classes-by-region
+# Check this link to see the different cluster tiers and fill below - https://docs.aws.amazon.com/documentdb/latest/devguide/db-instance-classes.html#db-instance-class-specs
+docdb_instance_class = "db.t3.medium"
+
+# DocumentDB master credentials.
+# Password: min 8 chars, no '/', '"', or '@'. Username CANNOT be admin
+docdb_master_username = "atlas"
+docdb_master_password = "CHANGE_ME_STRONG_PASSWORD"
+
+# Name of an EXISTING AWS EC2 key pair created in the AWS Console
+# (EC2 > Key Pairs). Must be in the same region as aws_region above.
+# You SSH in with the matching .pem file downloaded from that console.
+ec2_key_name = "demo-key"
+
+# Optional: Go tarball version to install. Default is 1.22.5.
+# go_version = "1.22.5"
+
+
