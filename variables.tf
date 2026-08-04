@@ -13,6 +13,17 @@ variable "project_name" {
 variable "docdb_instance_class" {
   description = "DocumentDB instance class, e.g. db.t3.medium, db.r6g.large, db.r6g.xlarge"
   type        = string
+
+  validation {
+    condition = contains([
+      "db.t3.medium", "db.t4g.medium",
+      "db.r5.large", "db.r5.xlarge", "db.r5.2xlarge",
+      "db.r6g.large", "db.r6g.xlarge", "db.r6g.2xlarge",
+      "db.r6gd.xlarge", "db.r6gd.2xlarge",
+      "db.r8g.large", "db.r8g.xlarge", "db.r8g.2xlarge",
+    ], var.docdb_instance_class)
+    error_message = "Unsupported or too-large DocumentDB instance class. Allowed (<=64 GiB RAM): db.t3.medium, db.t4g.medium, db.{r5,r6g,r8g}.{large,xlarge,2xlarge}, db.r6gd.{xlarge,2xlarge}."
+  }
 }
 
 variable "docdb_master_username" {
